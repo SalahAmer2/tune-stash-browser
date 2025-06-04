@@ -5,28 +5,52 @@ import Header from '@/components/Header';
 import TrackCard from '@/components/TrackCard';
 import TrackDetails from '@/components/TrackDetails';
 import MusicPlayer from '@/components/MusicPlayer';
-import { searchTracks } from '@/services/itunesAPI';
+import { searchTracks, getTrendingPodcasts, getPodcastsByGenre } from '@/services/itunesAPI';
 import { Track } from '@/types/Track';
 import { useFavorites } from '@/hooks/useFavorites';
 
 const Index = () => {
-  const [searchQuery, setSearchQuery] = useState('pop music');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
   const { favorites } = useFavorites();
 
-  const { data, isLoading, error } = useQuery({
+  const { data: searchData, isLoading: searchLoading, error: searchError } = useQuery({
     queryKey: ['tracks', searchQuery],
     queryFn: () => searchTracks(searchQuery),
     enabled: !!searchQuery,
   });
 
+  const { data: trendingPodcasts, isLoading: trendingLoading } = useQuery({
+    queryKey: ['trending-podcasts'],
+    queryFn: () => getTrendingPodcasts(20),
+    enabled: !searchQuery && !showFavorites,
+  });
+
+  const { data: comedyPodcasts } = useQuery({
+    queryKey: ['comedy-podcasts'],
+    queryFn: () => getPodcastsByGenre('comedy', 20),
+    enabled: !searchQuery && !showFavorites,
+  });
+
+  const { data: businessPodcasts } = useQuery({
+    queryKey: ['business-podcasts'],
+    queryFn: () => getPodcastsByGenre('business', 20),
+    enabled: !searchQuery && !showFavorites,
+  });
+
+  const { data: technologyPodcasts } = useQuery({
+    queryKey: ['technology-podcasts'],
+    queryFn: () => getPodcastsByGenre('technology', 20),
+    enabled: !searchQuery && !showFavorites,
+  });
+
   useEffect(() => {
     console.log('Current search query:', searchQuery);
-    console.log('API Response:', data);
-  }, [searchQuery, data]);
+    console.log('API Response:', searchData);
+  }, [searchQuery, searchData]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -43,7 +67,40 @@ const Index = () => {
     setShowDetails(true);
   };
 
-  const tracksToShow = showFavorites ? favorites : (data?.results || []);
+  const tracksToShow = showFavorites ? favorites : (searchData?.results || []);
+
+  const renderPodcastRow = (title: string, podcasts: Track[] | undefined, isLoading: boolean = false) => (
+    <div className="mb-12">
+      <h3 className="text-2xl font-bold text-white mb-6">{title}</h3>
+      {isLoading ? (
+        <div className="flex gap-6 overflow-x-auto pb-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex-shrink-0 w-48">
+              <div className="music-card animate-pulse">
+                <div className="w-full aspect-square bg-gray-700 rounded-lg mb-4"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-700 rounded"></div>
+                  <div className="h-3 bg-gray-700 rounded w-3/4"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex gap-6 overflow-x-auto pb-4">
+          {podcasts?.slice(0, 10).map((track) => (
+            <div key={track.trackId} className="flex-shrink-0 w-48">
+              <TrackCard
+                track={track}
+                onPlay={handlePlay}
+                onShowDetails={handleShowDetails}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="min-h-screen pb-24">
@@ -60,7 +117,7 @@ const Index = () => {
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
             }`}
           >
-            Browse Music
+            {searchQuery ? 'Search Results' : 'Browse Podcasts'}
           </button>
           <button
             onClick={() => setShowFavorites(true)}
@@ -96,13 +153,13 @@ const Index = () => {
               </div>
             )}
           </div>
-        ) : (
+        ) : searchQuery ? (
           <div>
             <h2 className="text-3xl font-bold text-white mb-8">
-              {searchQuery === 'pop music' ? 'Popular Music' : `Results for "${searchQuery}"`}
+              Results for "{searchQuery}"
             </h2>
             
-            {isLoading && (
+            {searchLoading && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {[...Array(10)].map((_, i) => (
                   <div key={i} className="music-card animate-pulse">
@@ -117,14 +174,14 @@ const Index = () => {
               </div>
             )}
 
-            {error && (
+            {searchError && (
               <div className="text-center py-12">
                 <p className="text-xl text-red-400 mb-4">Failed to load tracks</p>
                 <p className="text-gray-500">Please try again later</p>
               </div>
             )}
 
-            {data && !isLoading && (
+            {searchData && !searchLoading && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {tracksToShow.map((track) => (
                   <TrackCard
@@ -137,12 +194,24 @@ const Index = () => {
               </div>
             )}
 
-            {data && data.results.length === 0 && (
+            {searchData && searchData.results.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-xl text-gray-400 mb-4">No tracks found</p>
                 <p className="text-gray-500">Try searching for something else</p>
               </div>
             )}
+          </div>
+        ) : (
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-8">Discover Podcasts</h2>
+            
+            {/* Trending Podcasts */}
+            {renderPodcastRow('Trending Podcasts', trendingPodcasts?.results, trendingLoading)}
+            
+            {/* Popular by Genre */}
+            {renderPodcastRow('Comedy Podcasts', comedyPodcasts?.results)}
+            {renderPodcastRow('Business Podcasts', businessPodcasts?.results)}
+            {renderPodcastRow('Technology Podcasts', technologyPodcasts?.results)}
           </div>
         )}
       </main>
