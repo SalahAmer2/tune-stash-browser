@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { play, heart } from 'lucide-react';
+import { Play, Heart } from 'lucide-react';
 import { Track } from '@/types/Track';
 import { useFavorites } from '@/hooks/useFavorites';
 
@@ -59,10 +59,13 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
   const handleFavoriteClick = () => {
     if (!currentTrack) return;
     
+    console.log('Music player favorite clicked for:', currentTrack.trackName, 'Current favorite status:', isFavorite);
     if (isFavorite) {
       removeFromFavorites(currentTrack.trackId);
+      console.log('Removed from favorites in player');
     } else {
       addToFavorites(currentTrack);
+      console.log('Added to favorites in player');
     }
   };
 
@@ -108,14 +111,14 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
               isFavorite ? 'text-primary' : 'text-gray-400 hover:text-white'
             }`}
           >
-            <heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+            <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
           </button>
 
           <button
             onClick={togglePlayPause}
             className="play-button w-12 h-12 flex items-center justify-center"
           >
-            <play className={`w-6 h-6 fill-current ${isPlaying ? 'hidden' : 'block'}`} />
+            <Play className={`w-6 h-6 fill-current ${isPlaying ? 'hidden' : 'block'}`} />
             <div className={`w-2 h-6 bg-current ${isPlaying ? 'block' : 'hidden'}`} />
           </button>
         </div>

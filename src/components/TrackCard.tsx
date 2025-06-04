@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { play, heart } from 'lucide-react';
+import { Play, Heart } from 'lucide-react';
 import { Track } from '@/types/Track';
 import { useFavorites } from '@/hooks/useFavorites';
 
@@ -23,10 +23,13 @@ const TrackCard: React.FC<TrackCardProps> = ({ track, onPlay, onShowDetails }) =
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('Favorite clicked for track:', track.trackName, 'Current favorite status:', isFavorite);
     if (isFavorite) {
       removeFromFavorites(track.trackId);
+      console.log('Removed from favorites');
     } else {
       addToFavorites(track);
+      console.log('Added to favorites');
     }
   };
 
@@ -51,7 +54,7 @@ const TrackCard: React.FC<TrackCardProps> = ({ track, onPlay, onShowDetails }) =
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-lg"
         >
           <div className="play-button">
-            <play className="w-6 h-6 fill-current" />
+            <Play className="w-6 h-6 fill-current" />
           </div>
         </button>
 
@@ -64,7 +67,7 @@ const TrackCard: React.FC<TrackCardProps> = ({ track, onPlay, onShowDetails }) =
               : 'bg-black/70 text-white hover:bg-black/90'
           }`}
         >
-          <heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
+          <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
         </button>
       </div>
 

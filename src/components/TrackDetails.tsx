@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { play, heart, music } from 'lucide-react';
+import { Play, Heart, Music } from 'lucide-react';
 import { Track } from '@/types/Track';
 import { useFavorites } from '@/hooks/useFavorites';
 
@@ -36,10 +36,13 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({ track, isOpen, onClose, onP
   };
 
   const handleFavoriteClick = () => {
+    console.log('Track details favorite clicked for:', track.trackName, 'Current favorite status:', isFavorite);
     if (isFavorite) {
       removeFromFavorites(track.trackId);
+      console.log('Removed from favorites in details');
     } else {
       addToFavorites(track);
+      console.log('Added to favorites in details');
     }
   };
 
@@ -63,7 +66,7 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({ track, isOpen, onClose, onP
                 onClick={() => onPlay(track)}
                 className="flex-1 play-button"
               >
-                <play className="w-5 h-5 mr-2 fill-current" />
+                <Play className="w-5 h-5 mr-2 fill-current" />
                 Play Preview
               </Button>
               
@@ -72,7 +75,7 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({ track, isOpen, onClose, onP
                 variant={isFavorite ? "default" : "outline"}
                 className={`px-4 ${isFavorite ? 'bg-primary hover:bg-primary/80 text-black' : ''}`}
               >
-                <heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+                <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
               </Button>
             </div>
           </div>
@@ -119,7 +122,7 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({ track, isOpen, onClose, onP
                 className="w-full"
                 onClick={() => window.open(track.trackViewUrl, '_blank')}
               >
-                <music className="w-4 h-4 mr-2" />
+                <Music className="w-4 h-4 mr-2" />
                 View in iTunes
               </Button>
             </div>
