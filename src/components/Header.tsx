@@ -16,9 +16,9 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-primary to-emerald-400 rounded-full">
               <Music className="w-6 h-6 text-black" />
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+{/*             <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               TuneStash
-            </h1>
+            </h1> */}
           </div>
           <div className="flex-1 max-w-md mx-8">
             <SearchBar onSearch={onSearch} />
