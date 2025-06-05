@@ -9,7 +9,114 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      favorites: {
+        Row: {
+          artist_name: string
+          artwork_url: string | null
+          collection_name: string | null
+          country: string | null
+          created_at: string | null
+          currency: string | null
+          id: string
+          preview_url: string | null
+          primary_genre_name: string | null
+          release_date: string | null
+          track_id: number
+          track_name: string
+          track_price: number | null
+          track_time_millis: number | null
+          track_view_url: string | null
+          user_id: string
+        }
+        Insert: {
+          artist_name: string
+          artwork_url?: string | null
+          collection_name?: string | null
+          country?: string | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          preview_url?: string | null
+          primary_genre_name?: string | null
+          release_date?: string | null
+          track_id: number
+          track_name: string
+          track_price?: number | null
+          track_time_millis?: number | null
+          track_view_url?: string | null
+          user_id: string
+        }
+        Update: {
+          artist_name?: string
+          artwork_url?: string | null
+          collection_name?: string | null
+          country?: string | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          preview_url?: string | null
+          primary_genre_name?: string | null
+          release_date?: string | null
+          track_id?: number
+          track_name?: string
+          track_price?: number | null
+          track_time_millis?: number | null
+          track_view_url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      search_history: {
+        Row: {
+          id: string
+          query: string
+          results_count: number | null
+          searched_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          query: string
+          results_count?: number | null
+          searched_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          query?: string
+          results_count?: number | null
+          searched_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

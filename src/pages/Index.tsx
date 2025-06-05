@@ -5,9 +5,12 @@ import Header from '@/components/Header';
 import TrackCard from '@/components/TrackCard';
 import TrackDetails from '@/components/TrackDetails';
 import MusicPlayer from '@/components/MusicPlayer';
+import SearchHistory from '@/components/SearchHistory';
 import { searchTracks, getTrendingPodcasts, getPodcastsByGenre } from '@/services/itunesAPI';
 import { Track } from '@/types/Track';
-import { useFavorites } from '@/hooks/useFavorites';
+import { useSupabaseFavorites } from '@/hooks/useSupabaseFavorites';
+import { useSearchHistory } from '@/hooks/useSearchHistory';
+import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,7 +18,10 @@ const Index = () => {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
-  const { favorites } = useFavorites();
+  
+  const { user } = useAuth();
+  const { favorites, addToFavorites, removeFromFavorites, isFavorite } = useSupabaseFavorites();
+  const { addToSearchHistory } = useSearchHistory();
 
   const { data: searchData, isLoading: searchLoading, error: searchError } = useQuery({
     queryKey: ['tracks', searchQuery],
@@ -50,7 +56,12 @@ const Index = () => {
   useEffect(() => {
     console.log('Current search query:', searchQuery);
     console.log('API Response:', searchData);
-  }, [searchQuery, searchData]);
+    
+    // Add to search history when search completes
+    if (searchData && searchQuery) {
+      addToSearchHistory(searchQuery, searchData.results.length);
+    }
+  }, [searchQuery, searchData, addToSearchHistory]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -65,6 +76,14 @@ const Index = () => {
   const handleShowDetails = (track: Track) => {
     setSelectedTrack(track);
     setShowDetails(true);
+  };
+
+  const handleToggleFavorite = (track: Track) => {
+    if (isFavorite(track.trackId)) {
+      removeFromFavorites(track.trackId);
+    } else {
+      addToFavorites(track);
+    }
   };
 
   const tracksToShow = showFavorites ? favorites : (searchData?.results || []);
@@ -131,11 +150,21 @@ const Index = () => {
           </button>
         </div>
 
+        {/* Search History - only show when not searching and not showing favorites */}
+        {!searchQuery && !showFavorites && user && (
+          <SearchHistory onSelectQuery={handleSearch} />
+        )}
+
         {/* Content */}
         {showFavorites ? (
           <div>
             <h2 className="text-3xl font-bold text-white mb-8">Your Favorite Tracks</h2>
-            {favorites.length === 0 ? (
+            {!user ? (
+              <div className="text-center py-12">
+                <p className="text-xl text-gray-400 mb-4">Sign in to view your favorites</p>
+                <p className="text-gray-500">Sign in with Google to save your favorite tracks</p>
+              </div>
+            ) : favorites.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-xl text-gray-400 mb-4">No favorites yet</p>
                 <p className="text-gray-500">Add some tracks to your favorites to see them here</p>
@@ -148,6 +177,8 @@ const Index = () => {
                     track={track}
                     onPlay={handlePlay}
                     onShowDetails={handleShowDetails}
+                    onToggleFavorite={handleToggleFavorite}
+                    isFavorite={true}
                   />
                 ))}
               </div>
@@ -189,6 +220,8 @@ const Index = () => {
                     track={track}
                     onPlay={handlePlay}
                     onShowDetails={handleShowDetails}
+                    onToggleFavorite={handleToggleFavorite}
+                    isFavorite={isFavorite(track.trackId)}
                   />
                 ))}
               </div>
@@ -222,6 +255,8 @@ const Index = () => {
         isOpen={showDetails}
         onClose={() => setShowDetails(false)}
         onPlay={handlePlay}
+        onToggleFavorite={selectedTrack ? () => handleToggleFavorite(selectedTrack) : undefined}
+        isFavorite={selectedTrack ? isFavorite(selectedTrack.trackId) : false}
       />
 
       {/* Music Player */}
