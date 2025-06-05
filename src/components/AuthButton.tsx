@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { User, LogIn, LogOut } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { useToast } from '@/hooks/use-toast';
@@ -34,27 +35,6 @@ const AuthButton = () => {
 
     return () => subscription.unsubscribe();
   }, [toast]);
-
-  const signInWithGoogle = async () => {
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin,
-        },
-      });
-      if (error) throw error;
-    } catch (error) {
-      toast({
-        title: "Authentication Error",
-        description: "Failed to sign in with Google. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const signOut = async () => {
     setLoading(true);
@@ -98,14 +78,13 @@ const AuthButton = () => {
   }
 
   return (
-    <button
-      onClick={signInWithGoogle}
-      disabled={loading}
-      className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50"
+    <Link
+      to="/auth"
+      className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-black rounded-lg transition-colors"
     >
       <LogIn className="w-4 h-4" />
-      <span>Sign in with Google</span>
-    </button>
+      <span>Sign In</span>
+    </Link>
   );
 };
 
