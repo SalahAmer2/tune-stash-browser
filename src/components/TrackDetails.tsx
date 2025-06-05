@@ -4,21 +4,25 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Play, Heart, Music } from 'lucide-react';
 import { Track } from '@/types/Track';
-import { useFavorites } from '@/hooks/useFavorites';
 
 interface TrackDetailsProps {
   track: Track | null;
   isOpen: boolean;
   onClose: () => void;
   onPlay: (track: Track) => void;
+  onToggleFavorite?: () => void;
+  isFavorite?: boolean;
 }
 
-const TrackDetails: React.FC<TrackDetailsProps> = ({ track, isOpen, onClose, onPlay }) => {
-  const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
-  
+const TrackDetails: React.FC<TrackDetailsProps> = ({ 
+  track, 
+  isOpen, 
+  onClose, 
+  onPlay,
+  onToggleFavorite,
+  isFavorite = false 
+}) => {
   if (!track) return null;
-  
-  const isFavorite = favorites.some(fav => fav.trackId === track.trackId);
 
   const formatDuration = (milliseconds: number) => {
     const seconds = Math.floor(milliseconds / 1000);
@@ -37,12 +41,8 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({ track, isOpen, onClose, onP
 
   const handleFavoriteClick = () => {
     console.log('Track details favorite clicked for:', track.trackName, 'Current favorite status:', isFavorite);
-    if (isFavorite) {
-      removeFromFavorites(track.trackId);
-      console.log('Removed from favorites in details');
-    } else {
-      addToFavorites(track);
-      console.log('Added to favorites in details');
+    if (onToggleFavorite) {
+      onToggleFavorite();
     }
   };
 
@@ -70,13 +70,15 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({ track, isOpen, onClose, onP
                 Play Preview
               </Button>
               
-              <Button
-                onClick={handleFavoriteClick}
-                variant={isFavorite ? "default" : "outline"}
-                className={`px-4 ${isFavorite ? 'bg-primary hover:bg-primary/80 text-black' : ''}`}
-              >
-                <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
-              </Button>
+              {onToggleFavorite && (
+                <Button
+                  onClick={handleFavoriteClick}
+                  variant={isFavorite ? "default" : "outline"}
+                  className={`px-4 ${isFavorite ? 'bg-primary hover:bg-primary/80 text-black' : ''}`}
+                >
+                  <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+                </Button>
+              )}
             </div>
           </div>
 

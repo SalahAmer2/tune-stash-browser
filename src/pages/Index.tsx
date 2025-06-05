@@ -113,6 +113,8 @@ const Index = () => {
                 track={track}
                 onPlay={handlePlay}
                 onShowDetails={handleShowDetails}
+                onToggleFavorite={user ? handleToggleFavorite : undefined}
+                isFavorite={user ? isFavorite(track.trackId) : false}
               />
             </div>
           ))}
@@ -220,8 +222,8 @@ const Index = () => {
                     track={track}
                     onPlay={handlePlay}
                     onShowDetails={handleShowDetails}
-                    onToggleFavorite={handleToggleFavorite}
-                    isFavorite={isFavorite(track.trackId)}
+                    onToggleFavorite={user ? handleToggleFavorite : undefined}
+                    isFavorite={user ? isFavorite(track.trackId) : false}
                   />
                 ))}
               </div>
@@ -255,8 +257,8 @@ const Index = () => {
         isOpen={showDetails}
         onClose={() => setShowDetails(false)}
         onPlay={handlePlay}
-        onToggleFavorite={selectedTrack ? () => handleToggleFavorite(selectedTrack) : undefined}
-        isFavorite={selectedTrack ? isFavorite(selectedTrack.trackId) : false}
+        onToggleFavorite={selectedTrack && user ? () => handleToggleFavorite(selectedTrack) : undefined}
+        isFavorite={selectedTrack && user ? isFavorite(selectedTrack.trackId) : false}
       />
 
       {/* Music Player */}

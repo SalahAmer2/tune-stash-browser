@@ -2,18 +2,22 @@
 import React from 'react';
 import { Play, Heart } from 'lucide-react';
 import { Track } from '@/types/Track';
-import { useFavorites } from '@/hooks/useFavorites';
 
 interface TrackCardProps {
   track: Track;
   onPlay: (track: Track) => void;
   onShowDetails: (track: Track) => void;
+  onToggleFavorite?: (track: Track) => void;
+  isFavorite?: boolean;
 }
 
-const TrackCard: React.FC<TrackCardProps> = ({ track, onPlay, onShowDetails }) => {
-  const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
-  const isFavorite = favorites.some(fav => fav.trackId === track.trackId);
-
+const TrackCard: React.FC<TrackCardProps> = ({ 
+  track, 
+  onPlay, 
+  onShowDetails, 
+  onToggleFavorite,
+  isFavorite = false 
+}) => {
   const formatDuration = (milliseconds: number) => {
     const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -24,12 +28,8 @@ const TrackCard: React.FC<TrackCardProps> = ({ track, onPlay, onShowDetails }) =
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     console.log('Favorite clicked for track:', track.trackName, 'Current favorite status:', isFavorite);
-    if (isFavorite) {
-      removeFromFavorites(track.trackId);
-      console.log('Removed from favorites');
-    } else {
-      addToFavorites(track);
-      console.log('Added to favorites');
+    if (onToggleFavorite) {
+      onToggleFavorite(track);
     }
   };
 
@@ -59,16 +59,18 @@ const TrackCard: React.FC<TrackCardProps> = ({ track, onPlay, onShowDetails }) =
         </button>
 
         {/* Favorite button */}
-        <button
-          onClick={handleFavoriteClick}
-          className={`absolute top-2 right-2 p-2 rounded-full transition-all duration-300 ${
-            isFavorite 
-              ? 'bg-primary text-black' 
-              : 'bg-black/70 text-white hover:bg-black/90'
-          }`}
-        >
-          <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
-        </button>
+        {onToggleFavorite && (
+          <button
+            onClick={handleFavoriteClick}
+            className={`absolute top-2 right-2 p-2 rounded-full transition-all duration-300 ${
+              isFavorite 
+                ? 'bg-primary text-black' 
+                : 'bg-black/70 text-white hover:bg-black/90'
+            }`}
+          >
+            <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
+          </button>
+        )}
       </div>
 
       <div className="space-y-1">
