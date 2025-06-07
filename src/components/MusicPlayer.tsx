@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Heart } from 'lucide-react';
+import { Play, Pause, Heart } from 'lucide-react';
 import { Track } from '@/types/Track';
 import { useFavorites } from '@/hooks/useFavorites';
 
@@ -56,6 +56,17 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
     setIsPlaying(!isPlaying);
   };
 
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef.current || !duration) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    const seekTime = percent * duration;
+    
+    audioRef.current.currentTime = seekTime;
+    setCurrentTime(seekTime);
+  };
+
   const handleFavoriteClick = () => {
     if (!currentTrack) return;
     
@@ -73,6 +84,25 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const getImageSrc = () => {
+    // Try different image sizes from iTunes API
+    if (currentTrack?.artworkUrl600) {
+      return currentTrack.artworkUrl600;
+    }
+    if (currentTrack?.artworkUrl100) {
+      return currentTrack.artworkUrl100;
+    }
+    if (currentTrack?.artworkUrl60) {
+      return currentTrack.artworkUrl60;
+    }
+    if (currentTrack?.artworkUrl30) {
+      return currentTrack.artworkUrl30;
+    }
+    
+    // Use podcast-themed placeholder
+    return `https://images.unsplash.com/photo-1589903308904-1010c2294adc?w=60&h=60&fit=crop&crop=center`;
   };
 
   if (!currentTrack) {
@@ -93,7 +123,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
         {/* Track Info */}
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <img
-            src={currentTrack.artworkUrl60}
+            src={getImageSrc()}
             alt={currentTrack.trackName}
             className="w-12 h-12 rounded object-cover"
           />
@@ -118,8 +148,11 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
             onClick={togglePlayPause}
             className="play-button w-12 h-12 flex items-center justify-center"
           >
-            <Play className={`w-6 h-6 fill-current ${isPlaying ? 'hidden' : 'block'}`} />
-            <div className={`w-2 h-6 bg-current ${isPlaying ? 'block' : 'hidden'}`} />
+            {isPlaying ? (
+              <Pause className="w-6 h-6 fill-current" />
+            ) : (
+              <Play className="w-6 h-6 fill-current" />
+            )}
           </button>
         </div>
 
@@ -128,9 +161,12 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
           <span className="text-xs text-gray-400 w-10 text-right">
             {formatTime(currentTime)}
           </span>
-          <div className="flex-1 bg-gray-700 rounded-full h-1">
+          <div 
+            className="flex-1 bg-gray-700 rounded-full h-2 cursor-pointer hover:h-3 transition-all duration-200"
+            onClick={handleSeek}
+          >
             <div
-              className="bg-primary h-1 rounded-full transition-all duration-300"
+              className="bg-primary h-full rounded-full transition-all duration-100"
               style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
             />
           </div>

@@ -40,10 +40,28 @@ const TrackCard: React.FC<TrackCardProps> = ({
   };
 
   const getImageSrc = () => {
-    if (imageError || !track.artworkUrl100) {
-      return `https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=400&fit=crop&crop=center`;
+    // Try different image sizes from iTunes API
+    if (imageError) {
+      // Use a podcast-themed placeholder instead of music
+      return `https://images.unsplash.com/photo-1589903308904-1010c2294adc?w=400&h=400&fit=crop&crop=center`;
     }
-    return track.artworkUrl100;
+    
+    // Try to get higher resolution image first
+    if (track.artworkUrl600) {
+      return track.artworkUrl600;
+    }
+    if (track.artworkUrl100) {
+      return track.artworkUrl100;
+    }
+    if (track.artworkUrl60) {
+      return track.artworkUrl60;
+    }
+    if (track.artworkUrl30) {
+      return track.artworkUrl30;
+    }
+    
+    // If no artwork URL available, use placeholder
+    return `https://images.unsplash.com/photo-1589903308904-1010c2294adc?w=400&h=400&fit=crop&crop=center`;
   };
 
   return (
