@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Play, Heart, Music } from 'lucide-react';
@@ -22,6 +21,8 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({
   onToggleFavorite,
   isFavorite = false 
 }) => {
+  const [imageError, setImageError] = useState(false);
+
   if (!track) return null;
 
   const formatDuration = (milliseconds: number) => {
@@ -46,6 +47,17 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({
     }
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  const getImageSrc = () => {
+    if (imageError || !track.artworkUrl100) {
+      return `https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=400&fit=crop&crop=center`;
+    }
+    return track.artworkUrl100;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl bg-gradient-to-br from-gray-900 to-black border-gray-800">
@@ -56,9 +68,10 @@ const TrackDetails: React.FC<TrackDetailsProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <img
-              src={track.artworkUrl100}
+              src={getImageSrc()}
               alt={track.trackName}
               className="w-full aspect-square object-cover rounded-lg shadow-xl"
+              onError={handleImageError}
             />
             
             <div className="flex gap-3">

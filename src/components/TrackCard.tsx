@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Play, Heart } from 'lucide-react';
 import { Track } from '@/types/Track';
 
@@ -18,6 +18,8 @@ const TrackCard: React.FC<TrackCardProps> = ({
   onToggleFavorite,
   isFavorite = false 
 }) => {
+  const [imageError, setImageError] = useState(false);
+
   const formatDuration = (milliseconds: number) => {
     const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -33,6 +35,17 @@ const TrackCard: React.FC<TrackCardProps> = ({
     }
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  const getImageSrc = () => {
+    if (imageError || !track.artworkUrl100) {
+      return `https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400&h=400&fit=crop&crop=center`;
+    }
+    return track.artworkUrl100;
+  };
+
   return (
     <div 
       className="music-card cursor-pointer group relative"
@@ -40,9 +53,10 @@ const TrackCard: React.FC<TrackCardProps> = ({
     >
       <div className="relative">
         <img
-          src={track.artworkUrl100}
+          src={getImageSrc()}
           alt={track.trackName}
           className="w-full aspect-square object-cover rounded-lg mb-4 shadow-lg"
+          onError={handleImageError}
         />
         
         {/* Play button overlay */}
