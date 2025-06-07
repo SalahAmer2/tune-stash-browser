@@ -20,7 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     <form onSubmit={handleSubmit} className="w-full">
       <Input
         type="text"
-        placeholder="Search for artists, songs, albums..."
+        placeholder="Search for podcasts, hosts, topics..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="w-full bg-gray-800/50 border-gray-700 text-white placeholder-gray-400 focus:border-primary focus:ring-primary"

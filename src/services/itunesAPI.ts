@@ -1,4 +1,3 @@
-
 import { ITunesResponse } from '@/types/Track';
 
 const BASE_URL = 'https://itunes.apple.com/search';
@@ -7,21 +6,21 @@ export const searchTracks = async (query: string, limit: number = 50): Promise<I
   try {
     const params = new URLSearchParams({
       term: query,
-      media: 'music',
-      entity: 'song',
+      media: 'podcast',
+      entity: 'podcast',
       limit: limit.toString(),
     });
 
     const response = await fetch(`${BASE_URL}?${params}`);
     
     if (!response.ok) {
-      throw new Error('Failed to fetch tracks');
+      throw new Error('Failed to fetch podcasts');
     }
 
     const data: ITunesResponse = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching tracks:', error);
+    console.error('Error fetching podcasts:', error);
     throw error;
   }
 };

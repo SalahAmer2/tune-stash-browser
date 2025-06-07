@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Header from '@/components/Header';
@@ -24,7 +23,7 @@ const Index = () => {
   const { addToSearchHistory } = useSearchHistory();
 
   const { data: searchData, isLoading: searchLoading, error: searchError } = useQuery({
-    queryKey: ['tracks', searchQuery],
+    queryKey: ['podcasts', searchQuery],
     queryFn: () => searchTracks(searchQuery),
     enabled: !!searchQuery,
   });
@@ -160,16 +159,16 @@ const Index = () => {
         {/* Content */}
         {showFavorites ? (
           <div>
-            <h2 className="text-3xl font-bold text-white mb-8">Your Favorite Tracks</h2>
+            <h2 className="text-3xl font-bold text-white mb-8">Your Favorite Podcasts</h2>
             {!user ? (
               <div className="text-center py-12">
                 <p className="text-xl text-gray-400 mb-4">Sign in to view your favorites</p>
-                <p className="text-gray-500">Sign in with Google to save your favorite tracks</p>
+                <p className="text-gray-500">Sign in with email to save your favorite podcasts</p>
               </div>
             ) : favorites.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-xl text-gray-400 mb-4">No favorites yet</p>
-                <p className="text-gray-500">Add some tracks to your favorites to see them here</p>
+                <p className="text-gray-500">Add some podcasts to your favorites to see them here</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
@@ -189,7 +188,7 @@ const Index = () => {
         ) : searchQuery ? (
           <div>
             <h2 className="text-3xl font-bold text-white mb-8">
-              Results for "{searchQuery}"
+              Podcast results for "{searchQuery}"
             </h2>
             
             {searchLoading && (
@@ -209,7 +208,7 @@ const Index = () => {
 
             {searchError && (
               <div className="text-center py-12">
-                <p className="text-xl text-red-400 mb-4">Failed to load tracks</p>
+                <p className="text-xl text-red-400 mb-4">Failed to load podcasts</p>
                 <p className="text-gray-500">Please try again later</p>
               </div>
             )}
@@ -231,7 +230,7 @@ const Index = () => {
 
             {searchData && searchData.results.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-xl text-gray-400 mb-4">No tracks found</p>
+                <p className="text-xl text-gray-400 mb-4">No podcasts found</p>
                 <p className="text-gray-500">Try searching for something else</p>
               </div>
             )}
