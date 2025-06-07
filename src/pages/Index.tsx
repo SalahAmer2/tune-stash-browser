@@ -137,7 +137,7 @@ const Index = () => {
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
             }`}
           >
-            {searchQuery ? 'Search Results' : 'Browse Podcasts'}
+            {searchQuery ? 'Search Results' : 'Browse Episodes'}
           </button>
           <button
             onClick={() => setShowFavorites(true)}
@@ -159,16 +159,16 @@ const Index = () => {
         {/* Content */}
         {showFavorites ? (
           <div>
-            <h2 className="text-3xl font-bold text-white mb-8">Your Favorite Podcasts</h2>
+            <h2 className="text-3xl font-bold text-white mb-8">Your Favorite Episodes</h2>
             {!user ? (
               <div className="text-center py-12">
                 <p className="text-xl text-gray-400 mb-4">Sign in to view your favorites</p>
-                <p className="text-gray-500">Sign in with email to save your favorite podcasts</p>
+                <p className="text-gray-500">Sign in with email to save your favorite podcast episodes</p>
               </div>
             ) : favorites.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-xl text-gray-400 mb-4">No favorites yet</p>
-                <p className="text-gray-500">Add some podcasts to your favorites to see them here</p>
+                <p className="text-gray-500">Add some podcast episodes to your favorites to see them here</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
@@ -188,7 +188,7 @@ const Index = () => {
         ) : searchQuery ? (
           <div>
             <h2 className="text-3xl font-bold text-white mb-8">
-              Podcast results for "{searchQuery}"
+              Podcast episode results for "{searchQuery}"
             </h2>
             
             {searchLoading && (
@@ -208,7 +208,7 @@ const Index = () => {
 
             {searchError && (
               <div className="text-center py-12">
-                <p className="text-xl text-red-400 mb-4">Failed to load podcasts</p>
+                <p className="text-xl text-red-400 mb-4">Failed to load podcast episodes</p>
                 <p className="text-gray-500">Please try again later</p>
               </div>
             )}
@@ -230,22 +230,22 @@ const Index = () => {
 
             {searchData && searchData.results.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-xl text-gray-400 mb-4">No podcasts found</p>
+                <p className="text-xl text-gray-400 mb-4">No playable podcast episodes found</p>
                 <p className="text-gray-500">Try searching for something else</p>
               </div>
             )}
           </div>
         ) : (
           <div>
-            <h2 className="text-3xl font-bold text-white mb-8">Discover Podcasts</h2>
+            <h2 className="text-3xl font-bold text-white mb-8">Discover Podcast Episodes</h2>
             
             {/* Trending Podcasts */}
-            {renderPodcastRow('Trending Podcasts', trendingPodcasts?.results, trendingLoading)}
+            {renderPodcastRow('Trending Episodes', trendingPodcasts?.results, trendingLoading)}
             
             {/* Popular by Genre */}
-            {renderPodcastRow('Comedy Podcasts', comedyPodcasts?.results)}
-            {renderPodcastRow('Business Podcasts', businessPodcasts?.results)}
-            {renderPodcastRow('Technology Podcasts', technologyPodcasts?.results)}
+            {renderPodcastRow('Comedy Episodes', comedyPodcasts?.results)}
+            {renderPodcastRow('Business Episodes', businessPodcasts?.results)}
+            {renderPodcastRow('Technology Episodes', technologyPodcasts?.results)}
           </div>
         )}
       </main>
