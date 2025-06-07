@@ -41,8 +41,12 @@ export const searchByAlbum = async (album: string, limit: number = 50): Promise<
 
 export const getTrendingPodcasts = async (limit: number = 20): Promise<ITunesResponse> => {
   try {
+    // Search for popular podcast terms to get trending episodes
+    const trendingTerms = ['Joe Rogan', 'true crime', 'history', 'news', 'interviews'];
+    const randomTerm = trendingTerms[Math.floor(Math.random() * trendingTerms.length)];
+    
     const params = new URLSearchParams({
-      term: 'podcast',
+      term: randomTerm,
       media: 'podcast',
       entity: 'podcastEpisode',
       limit: limit.toString(),

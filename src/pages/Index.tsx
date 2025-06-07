@@ -85,6 +85,11 @@ const Index = () => {
     }
   };
 
+  const handleBackToHome = () => {
+    setSearchQuery('');
+    setShowFavorites(false);
+  };
+
   const tracksToShow = showFavorites ? favorites : (searchData?.results || []);
 
   const renderPodcastRow = (title: string, podcasts: Track[] | undefined, isLoading: boolean = false) => (
@@ -124,7 +129,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen pb-24">
-      <Header onSearch={handleSearch} />
+      <Header onSearch={handleSearch} onBackToHome={handleBackToHome} />
       
       <main className="container mx-auto px-4 py-8">
         {/* Navigation */}
@@ -240,7 +245,7 @@ const Index = () => {
             <h2 className="text-3xl font-bold text-white mb-8">Discover Podcast Episodes</h2>
             
             {/* Trending Podcasts */}
-            {renderPodcastRow('Trending Episodes', trendingPodcasts?.results, trendingLoading)}
+            {renderPodcastRow('Trending Podcast Episodes', trendingPodcasts?.results, trendingLoading)}
             
             {/* Popular by Genre */}
             {renderPodcastRow('Comedy Episodes', comedyPodcasts?.results)}
