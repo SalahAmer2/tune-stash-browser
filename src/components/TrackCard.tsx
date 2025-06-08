@@ -35,6 +35,12 @@ const TrackCard: React.FC<TrackCardProps> = ({
     }
   };
 
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('Play clicked for track:', track.trackName);
+    onPlay(track);
+  };
+
   const handleImageError = () => {
     setImageError(true);
   };
@@ -79,10 +85,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
         
         {/* Play button overlay */}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onPlay(track);
-          }}
+          onClick={handlePlayClick}
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-lg"
         >
           <div className="play-button">
