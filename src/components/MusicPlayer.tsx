@@ -171,11 +171,12 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
               className="bg-primary h-full rounded-full transition-all duration-100 relative"
               style={{ width: `${progressPercentage}%` }}
             >
-              {/* Progress dot */}
-              <div 
-                className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full border-2 border-primary shadow-lg"
-                style={{ display: progressPercentage > 0 ? 'block' : 'none' }}
-              />
+              {/* Green progress dot */}
+              {progressPercentage > 0 && (
+                <div 
+                  className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full border-2 border-white shadow-lg"
+                />
+              )}
             </div>
           </div>
           <span className="text-xs text-gray-400 w-10">
