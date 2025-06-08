@@ -115,6 +115,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
     );
   }
 
+  const progressPercentage = duration ? (currentTime / duration) * 100 : 0;
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-gray-900 to-black border-t border-gray-800 p-4 shadow-xl">
       <audio ref={audioRef} />
@@ -162,13 +164,19 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
             {formatTime(currentTime)}
           </span>
           <div 
-            className="flex-1 bg-gray-700 rounded-full h-2 cursor-pointer hover:h-3 transition-all duration-200"
+            className="flex-1 bg-gray-700 rounded-full h-2 cursor-pointer hover:h-3 transition-all duration-200 relative"
             onClick={handleSeek}
           >
             <div
-              className="bg-primary h-full rounded-full transition-all duration-100"
-              style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
-            />
+              className="bg-primary h-full rounded-full transition-all duration-100 relative"
+              style={{ width: `${progressPercentage}%` }}
+            >
+              {/* Progress dot */}
+              <div 
+                className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full border-2 border-primary shadow-lg"
+                style={{ display: progressPercentage > 0 ? 'block' : 'none' }}
+              />
+            </div>
           </div>
           <span className="text-xs text-gray-400 w-10">
             {formatTime(duration)}

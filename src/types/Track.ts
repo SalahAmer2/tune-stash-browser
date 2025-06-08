@@ -6,8 +6,8 @@ export interface Track {
   collectionName: string;
   artworkUrl100: string;
   artworkUrl60: string;
-  artworkUrl30: string;
-  artworkUrl600: string;
+  artworkUrl30?: string;
+  artworkUrl600?: string;
   previewUrl: string;
   trackTimeMillis: number;
   primaryGenreName: string;

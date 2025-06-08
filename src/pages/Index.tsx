@@ -92,6 +92,9 @@ const Index = () => {
 
   const tracksToShow = showFavorites ? favorites : (searchData?.results || []);
 
+  // Determine if we're on the home page (no search query and not showing favorites)
+  const isOnHomePage = !searchQuery && !showFavorites;
+
   const renderPodcastRow = (title: string, podcasts: Track[] | undefined, isLoading: boolean = false) => (
     <div className="mb-12">
       <h3 className="text-2xl font-bold text-white mb-6">{title}</h3>
@@ -129,7 +132,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen pb-24">
-      <Header onSearch={handleSearch} onBackToHome={handleBackToHome} />
+      <Header 
+        onSearch={handleSearch} 
+        onBackToHome={handleBackToHome}
+        showBackToHome={!isOnHomePage}
+      />
       
       <main className="container mx-auto px-4 py-8">
         {/* Navigation */}
