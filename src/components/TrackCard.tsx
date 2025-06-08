@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Play, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Track } from '@/types/Track';
 
 interface TrackCardProps {
@@ -33,12 +33,6 @@ const TrackCard: React.FC<TrackCardProps> = ({
     if (onToggleFavorite) {
       onToggleFavorite(track);
     }
-  };
-
-  const handlePlayClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log('Play clicked for track:', track.trackName);
-    onPlay(track);
   };
 
   const handleImageError = () => {
@@ -79,19 +73,9 @@ const TrackCard: React.FC<TrackCardProps> = ({
         <img
           src={getImageSrc()}
           alt={track.trackName}
-          className="w-full aspect-square object-cover rounded-lg mb-4 shadow-lg"
+          className="w-full aspect-square object-cover rounded-lg mb-4 shadow-lg group-hover:opacity-80 transition-opacity duration-300"
           onError={handleImageError}
         />
-        
-        {/* Play button overlay */}
-        <button
-          onClick={handlePlayClick}
-          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-lg"
-        >
-          <div className="play-button">
-            <Play className="w-6 h-6 fill-current" />
-          </div>
-        </button>
 
         {/* Favorite button */}
         {onToggleFavorite && (
