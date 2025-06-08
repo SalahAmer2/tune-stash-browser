@@ -19,10 +19,18 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentTrack }) => {
 
   useEffect(() => {
     if (audioRef.current && currentTrack?.previewUrl) {
+      console.log('Loading new track:', currentTrack.trackName);
       audioRef.current.src = currentTrack.previewUrl;
       audioRef.current.load();
-      setIsPlaying(false);
       setCurrentTime(0);
+      // Auto-play the new track
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+        console.log('Auto-playing track:', currentTrack.trackName);
+      }).catch((error) => {
+        console.log('Auto-play failed:', error);
+        setIsPlaying(false);
+      });
     }
   }, [currentTrack]);
 
